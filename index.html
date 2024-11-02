@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Course Platform</h1>
+    </header>
+
+    <main>
+        <img src="physics.jpg" alt="Physics" id="physics-image" style="width:150px; height:auto; cursor:pointer;">
+        <img src="chemistry.jpg" alt="Chemistry" id="chemistry-image" style="width:150px; height:auto; cursor:pointer;">
+        <button onclick="checkPassword()">Host</button>
+    </main>
+
+    <script>
+        // التحقق من كلمة المرور للوصول إلى صفحة Host
+        function checkPassword() {
+            const password = prompt("Please enter the password:");
+            if (password === "admin123") {
+                window.location.href = "host.html"; // الانتقال إلى صفحة host.html في حالة إدخال كلمة مرور صحيحة
+            } else {
+                alert("Incorrect password. Access denied."); // رسالة خطأ في حالة إدخال كلمة مرور خاطئة
+            }
+        }
+
+        // إعداد الانتقال عند الضغط على صور الفيزياء والكيمياء
+        document.getElementById("physics-image").onclick = function() {
+            window.location.href = "physics.html"; // الانتقال إلى صفحة physics.html عند الضغط على صورة الفيزياء
+        };
+
+        document.getElementById("chemistry-image").onclick = function() {
+            window.location.href = "chemistry.html"; // الانتقال إلى صفحة chemistry.html عند الضغط على صورة الكيمياء
+        };
+    </script>
+</body>
+</html>

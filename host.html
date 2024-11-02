@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Host Controls</h1>
+    </header>
+
+    <main>
+        <button id="view-codes" onclick="viewcode()">View Codes</button>
+        <button id="inspect">Inspect</button>
+        
+        <div id="codes-list" style="display: none;"></div>
+        <div id="inspect-info" style="display: none;">
+            <h2>Inspect Info</h2>
+            <div id="physics-count"></div>
+            <div id="chemistry-count"></div>
+            <button id="reset-physics">Reset Physics</button>
+            <button id="reset-chemistry">Reset Chemistry</button>
+        </div>
+    </main>
+
+    <script>
+        // إعداد البيانات المخزنة إذا لم تكن موجودة
+        function viewcode(){
+
+        }
+        function initializeStorage() {
+            if (!localStorage.getItem('codes')) {
+                localStorage.setItem('codes', JSON.stringify(['Code1', 'Code2', 'Code3']));
+            }
+            if (!localStorage.getItem('viewCount')) {
+                localStorage.setItem('viewCount', JSON.stringify({}));
+            }
+        }
+        initializeStorage();
+
+        // عرض الأكواد المخزنة عند الضغط على زر View Codes
+        document.getElementById('view-codes').onclick = function() {
+    const codesList = document.getElementById('codes-list');
+    const storedCodes = JSON.parse(localStorage.getItem('codes')) || [];
+
+    // إذا كانت القائمة فارغة
+    if (storedCodes.length === 0) {
+        codesList.innerHTML = '<p>No codes available.</p>';
+    } else {
+        // عرض الأكواد بترتيب رقمي
+        let codesHTML = '';
+        storedCodes.forEach((code, index) => {
+            codesHTML += '<p>' + (index + 1) + '. ' + code + '</p>';
+        });
+        codesList.innerHTML = codesHTML;
+    }
+
+    // عرض أو إخفاء القائمة
+    codesList.style.display = codesList.style.display === 'none' ? 'block' : 'none';
+};
+
+        // عرض معلومات الفحص عند الضغط على زر Inspect
+        document.getElementById('inspect').onclick = function() {
+    const inspectInfo = document.getElementById('inspect-info');
+    
+    // الحصول على عدد المشاهدات من التخزين المحلي
+    const viewCount = JSON.parse(localStorage.getItem('viewCount')) || {};
+
+    // حساب عدد المشاهدات لكل من الفيزياء والكيمياء
+    const physicsCount = Object.keys(viewCount).filter(key => key.startsWith('physics')).length;
+    const chemistryCount = Object.keys(viewCount).filter(key => key.startsWith('chemistry')).length;
+
+    // تحديث النصوص لعرض عدد الأكواد المستخدمة
+    document.getElementById('physics-count').innerText = "Physics = " + physicsCount + " code(s)";
+    document.getElementById('chemistry-count').innerText = "Chemistry = " + chemistryCount + " code(s)";
+
+    // عرض أو إخفاء معلومات الفحص
+    inspectInfo.style.display = inspectInfo.style.display === 'none' ? 'block' : 'none';
+};
+
+// زر Reset Physics لإعادة تعيين عدد الأكواد المستخدمة في الفيزياء
+document.getElementById('reset-physics').onclick = function() {
+    const viewCount = JSON.parse(localStorage.getItem('viewCount')) || {};
+    for (let key in viewCount) {
+        if (key.startsWith('physics')) {
+            delete viewCount[key];
+        }
+    }
+    localStorage.setItem('viewCount', JSON.stringify(viewCount));
+    document.getElementById('physics-count').innerText = "Physics = 0 code(s)";
+    alert("تم إعادة عدد الأكواد المستخدمة في الفيزياء إلى 0.");
+};
+
+// زر Reset Chemistry لإعادة تعيين عدد الأكواد المستخدمة في الكيمياء
+document.getElementById('reset-chemistry').onclick = function() {
+    const viewCount = JSON.parse(localStorage.getItem('viewCount')) || {};
+    for (let key in viewCount) {
+        if (key.startsWith('chemistry')) {
+            delete viewCount[key];
+        }
+    }
+    localStorage.setItem('viewCount', JSON.stringify(viewCount));
+    document.getElementById('chemistry-count').innerText = "Chemistry = 0 code(s)";
+    alert("تم إعادة عدد الأكواد المستخدمة في الكيمياء إلى 0.");
+};
+    </script>
+</body>
+</html>

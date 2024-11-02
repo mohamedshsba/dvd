@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Videos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Chemistry Videos</h1>
+        
+    </header>
+
+    <main>
+        <h2>Available Videos</h2>
+        <div>
+            <button class="video-button" data-video="video5.mp4">Video 5</button>
+            <button class="video-button" data-video="video6.mp4">Video 6</button>
+            <button class="video-button" data-video="video7.mp4">Video 7</button>
+            <button class="video-button" data-video="video8.mp4">Video 8</button>
+        </div>
+        <div id="view-count"></div>
+    </main>
+
+    <script>
+        const storedCodes = JSON.parse(localStorage.getItem('codes')) || [];
+        const usedCodes = new Set(); // لتتبع الأكواد المستخدمة
+        const videoButtons = document.querySelectorAll('.video-button');
+        const resetButton = document.getElementById('reset-chemistry');
+
+        videoButtons.forEach(button => {
+            button.onclick = function() {
+                const videoFile = this.getAttribute('data-video');
+                let userCode = prompt("Please enter the code to access the video:");
+
+                if (userCode && storedCodes.includes(userCode) && !usedCodes.has(userCode)) {
+                    usedCodes.add(userCode);
+                    alert("تم التسجيل بنجاح");
+                    const videoCount = document.getElementById('view-count');
+                    videoCount.innerHTML =' مشاهدة ${videoFile}';
+
+                    // زيادة عدد المشاهدات
+                    const viewCount = JSON.parse(localStorage.getItem('viewCount')) || {};
+                    viewCount[videoFile] = (viewCount[videoFile] || 0) + 1;
+                    localStorage.setItem('viewCount', JSON.stringify(viewCount)); // تحديث التخزين
+
+                    // حذف الكود المستخدم
+                    storedCodes.splice(storedCodes.indexOf(userCode), 1);
+                    localStorage.setItem('codes', JSON.stringify(storedCodes)); // تحديث الأكواد
+                } else {
+                    alert("الكود غير صالح أو تم استخدامه مسبقاً.");
+                }
+            };
+        });
+
+        resetButton.onclick = function() {
+            usedCodes.clear();
+            alert("تم إعادة الأعداد إلى الصفر.");
+        };
+    </script>
+</body>
+</html>
